@@ -32,7 +32,7 @@
 \setlength{\belowcaptionskip}{-10pt}
 \twocolumn[{
 \Large
-\center{\ATDLLMD{}: Akzeptanztestgetriebene LLM-Entwicklung}
+\center{Akzeptanztestgetriebene LLM-Entwicklung -- \ATDLLMD{}}
 \vspace{3mm}
 \normalsize
 \center{David Faragó, Mediform / QPR Technologies, Karlsruhe}
@@ -40,51 +40,104 @@
 \slshape
 }]
 
-\section{Zusammenfassung}
-Da die Fähigkeiten von großen Sprachmodellen (LLMs) in den letzten Jahren massiv zugenommen haben \cite{Brown20, Kaplan20}, sind viele neue Anwendungen auf Basis von LLMs möglich, zum Beispiel natürliche aufgabenorientierte Telefongespräche wie das Buchen eines Termins in Ihrer Arztpraxis. Diese neuen Anwendungen stellen jedoch auch neue Herausforderungen in der LLM-Entwicklung dar:
+\section{Übersicht}
+Die Fähigkeiten von großen Sprachmodellen (Large Language Models, LLMs) haben in den letzten Jahren massiv zugenommen \cite{Brown20, Kaplan20} und damit viele neue Anwendungsbereiche auf Basis von LLMs ermöglicht. Ein Beispiel ist ein natürlich-sprachlicher, autonomer Telefonassistent,
+%(Task-Oriented Dialogue, TOD),
+z.B. für das telefonische Buchen eines Termins in einer Arztpraxis. Diese neuen Anwendungsbereiche bringen jedoch auch neue Herausforderungen in der Entwicklung von KI-Systemen mit LLMs (LLM-Systemen):
 \begin{compactenum}
-\item Wie können Best Practices aus entfernten Bereichen zusammengeführt werden \cite{Studer21, CPMAI}.
-\item Welche Produkte und Funktionen sollen innerhalb und um das LLM herum entwickelt werden, welche Aspekte sollen validiert werden und wie \cite{Github23, Wang24, Röttger24}.
-\item Was und wie soll das LLM verifiziert und evaluiert werden \cite{Chang24}, insbesondere für sicherheitskritische Anwendungen, d.\,h. Aufgaben, die einzelnen Nutzern schaden können oder sogar zu Katastrophen für die Bevölkerung führen können \cite{Anthropic23, Dalrymple24}.
+\item In der Entwicklung, Validierung und Verifikation von LLM-Systemen treffen unterschiedliche Fachbereiche aufeinander, so dass Prozesse und bewährte Praktiken aus diesen unterschiedlichen Fachbereichen  zusammengeführt werden sollten \cite{Studer21, CPMAI, Dalrymple24}.
+\item Die LLM-Systeme und deren Features müssen für ganz neue Anwendungsbereiche, in denen noch niemand Erfahrung sammeln konte, validiert werden \cite{Github23, Wang24, Röttger24}, um zu entscheiden, welche Fähigkeiten des LLMs und welche LLM-Systeme mit welchen Features entwickelt werden sollten.
+\item Wie können das LLM und das LLM-System verifiziert und evaluiert werden \cite{Chang24}, trotz ihres natürlichsprachlichen und nichtdeterministischen Verhaltens? Die Entscheidung hängt auch vom Einsatzgebiet des LLM-Systems ab, insbesondere von der Einstufung bezüglich des akzeptierten Risikos auf die Gesamtbevölkerung \cite{Anthropic23, Dalrymple24} und bezüglich des akzeptierten Einflusses und Risikos auf den einzelnen Benutzer \cite{EUAI24}. 
+  %insbesondere für sicherheitskritische Anwendungen, d.\,h. Aufgaben, die einzelnen Nutzern schaden können oder sogar zu Katastrophen für die Bevölkerung führen können \cite{Anthropic23, Dalrymple24}.
+  %, sowie der Intelligenz und Autonomie \cite{OpenAI24}.
 \end{compactenum}
 
-Wir gehen die drei oben genannten Herausforderungen an, indem wir einen akzeptanztestgetriebenen Entwicklungsstil für LLMs übernehmen, getauft \ATDLLMD{}, bei dem die Trainings- und Testsätze des LLMs in jeder Iteration durch Benutzerdaten erweitert werden, die aus der Validierung des LLMs und des Systems um das LLM der vorherigen Iteration stammen. Nach unserem Kenntnisstand wurde dies bisher nicht getan. Die Validierungsphase liefert die zusätzlichen oder aktualisierten (anonymisierten) Daten für das Training und die Verifikation des LLMs. \ATDLLMD{} wird durch zwei große innovative Lösungen ermöglicht: die Anwendung des innovativen CPMAI-Prozesses \cite{CPMAI} und die Anwendung unseres eigenen Verifikationstools, LM-Eval, was zu einem Rot-Train-Grün-Zyklus für die LLM-Entwicklung führt, der ATDD ähnelt, aber Data-Science-Best-Practices integriert.
+Wir gehen die drei oben genannten Herausforderungen an, indem wir einen akzeptanztestgetriebenen Entwicklungsstil für LLMs einführen, getauft \ATDLLMD{} (Acceptance Test Driven LLM Development): die Trainings- und Testsätze des LLMs werden in jeder Iteration durch Daten erweitert, die aus der Validierung des LLM-Systems aus der vorherigen Iteration stammen.
+%Nach unserem Kenntnisstand wurde dies bisher nicht getan.
+Somit liefert die Validierungsphase die neuen oder aktualisierten (anonymisierten) Daten, um in der neuen Iteration das LLM besser trainieren und verifizieren zu können. 
 
-Wir bewerten die Sicherheitskritikalität unserer Anwendung und die Stärke der Sicherheitserklärungen von \ATDLLMD{}, d.\,h. seine Anwendbarkeit für sicherheitskritische Anwendungen, mit Hilfe des Guaranteed Safe AI Frameworks (GS AI) \cite{Dalrymple24}. Dazu listen wir das Weltmodell, die Sicherheitsspezifikation und die Verifikationsfähigkeit von \ATDLLMD{} und unseres Methodenensembles auf, das \ATDLLMD{} begleitet.
+Um \ATDLLMD{} umzusetzen, kommen zwei Werkzeuge zum Einsatz: der innovative CPMAI-Prozess (Cognitive Process Management AI) \cite{CPMAI} und ein von der Firma Mediform neu entwickeltes Verifikationstool, LM-Eval. Damit wird die LLM-Entwicklung mit \ATDLLMD{} zu einem Rot-Train-Grün-Zyklus, der ATDD ähnelt, aber bewährte Praktiken der Data-Science integriert.
+
+Wir bewerten die Sicherheitskritikalität unserer Anwendung auf die Gesamtbevölkerung, und auf einzelne Anwender, und die Stärke der Sicherheitsaussagen von \ATDLLMD{}. %d.h. seine Anwendbarkeit für sicherheitskritische Anwendungen,
+Dafür verwenden wir das Guaranteed Safe AI Framework (GS AI) \cite{Dalrymple24}. 
 
 Beiträge:
 \begin{compactitem}
-\item Einführung unseres neuartigen Evaluations- und Testtools LM-Eval, das kundenorientierte Evaluationsmetriken für LLMs ermöglicht.
-\item Die Anpassung von CPMAI und LM-Eval an einen test-first Ansatz in der LLM-Entwicklung, wodurch die ATDD-Methodik in die LLM-Entwicklung gebracht wird.
-\item Eine Fallstudie in der Entwicklung eines LLMs für ein Produkt mit hoher gesellschaftlicher Bedeutung: dem Telefon-Bot MediVoice \cite{MediVoice}, der Patientendienste telefonisch autonom verwaltet. Wir beschreiben das Cognitive Process Management AI (CPMAI) Framework, das wir anwenden, und zeigen in diesem Papier eine beispielhafte Rundreise. CPMAI verwebt Datenzentriertheit, Iterationen und Agilität mit Fokus auf Geschäftswerte. Darüber hinaus integrieren wir GS AI in einer leichtgewichtigen Variante.
+\item Einführung unseres neuartigen Evaluations- und Testtools LM-Eval, das die Verifikation nichtdeterministischer, natürlichsprachlicher LLMs mit kundenorientierten Evaluationsmetriken ermöglicht.
+\item Die Anpassung von CPMAI und LM-Eval an einen neuen Test-First-Ansatz in der LLM-Entwicklung, genannt \ATDLLMD{}, wodurch die ATDD-Methode in die LLM-Entwicklung gebracht wird.
+\item Eine Fallstudie in der Entwicklung eines LLMs für ein Produkt mit hoher gesellschaftlicher Bedeutung: dem Telefon-Bot MediVoice \cite{MediVoice}, der Patientendienste telefonisch und autonom verwaltet. Wir beschreiben das CPMAI Framework und einen beispielhaften Roundtrip durch dessen Prozessstufen. CPMAI verwebt Datenzentriertheit, Iterationen und Agilität mit Fokus auf Geschäftswerte. Wir integrieren \ATDLLMD{} in CPMAI, sowie GS AI in einer leichtgewichtigen Variante.
 \end{compactitem}
 
-Schlüsselwörter: \emph{Großes Sprachmodell, LLM, Entwicklungsprozess, test-first, LLM-Evaluierung, LLM-Testing, daten-zentrierte KI, geschäftszentrierte KI, Guaranteed Safe AI, GS AI}
+Schlüsselwörter: \emph{Großes Sprachmodell, LLM, Entwicklungsprozess, test-first, LLM-Evaluierung, LLM-Testing, daten-zentrierte KI, geschäftszentrierte KI, funktionale Sicherheit, FuSi, Guaranteed Safe AI, GS AI}
 
-\section{Einleitung}
+\section{Herausforderungen}
 
-Die Fähigkeiten von LLMs schreiten mit hoher Geschwindigkeit voran \cite{Minaee24}, was immer bessere natürliche Sprachverarbeitung, Schlussfolgerungen und Downstream-Aufgaben ermöglicht \cite{Kaplan20}. Aufgrund dieses schnellen Fortschritts hinken jedoch Best Practices, Prozesse und Tools bei der Entwicklung und Feinabstimmung dieser LLMs hinterher, insbesondere Tools zur Verifikation und Evaluierung der LLMs. Wie \cite{Gra23} es ausdrückt: LLMs sind eine Technologie, die von Außerirdischen ohne Handbuch geschenkt wurde. Dies verursacht drei Herausforderungen in der LLM-Entwicklung und Feinabstimmung\footnote{Neben der Herausforderung besserer Modellarchitekturen und Trainingstechniken. Aber diese werden in Wissenschaft und Industrie gut erforscht, z.\,B. kontinuierliches Pre-Training \cite{Ke23} oder parameter-effizientes Fine-Tuning \cite{Liu22}, Quantisierung \cite{Dettmers22}, Modell-Merging \cite{Akiba24}.}:
+Die Fähigkeiten von LLMs nehmen rasant zu \cite{Minaee24}, wodurch immer bessere Verarbeitung in natürliche Sprache,
+Schlussfolgerungen, Generalisierung und damit individuelle (Downstream-)Aufgaben ermöglicht werden \cite{Kaplan20}.
+Aufgrund dieses schnellen Fortschritts hinken jedoch bewährte Praktiken, Prozesse und Tools
+bei der Entwicklung und Feinabstimmung dieser LLMs hinterher,
+insbesondere Tools zur Verifikation und Evaluierung der LLMs\footnote{Wie \cite{Gra23} es ausdrückt: LLMs sind eine Technologie, die uns von Außerirdischen ohne Handbuch geschenkt wurde.}.
+Dies verursacht drei\footnote{Neben der Herausforderung besserer Modellarchitekturen und Trainingstechniken. Aber diese werden in Wissenschaft und Industrie intensiv erforscht, z.\,B. neue Architekturen \cite{Hasani22, Patro24, Merrill24, Fu24, Ma24, Sun24}, Neural-Architecture-Search \cite{Ren21, Saad24}, kontinuierliches Pre-Training \cite{Ke23}, parameter-effizientes Fine-Tuning \cite{Liu22}, Knowledge-Distillation \cite{Xu24}, Quantisierung \cite{Dettmers22}, Pruning \cite{Cheng24}, Modell-Merging \cite{Akiba24}.}
+Herausforderungen in der LLM-Entwicklung und Feinabstimmung:
 \begin{compactenum}
-\item \textbf{Zusammenführen von Best Practices} aus verschiedenen Bereichen: Können Best Practices aus sowohl Softwareentwicklung (z.\,B. agil und testgetrieben) als auch Data Science (Abdeckung von Domänenwissen, Statistik, ML, Visualisierungen) in einen kohäsiven, modernen und effektiven Entwicklungsprozess für LLMs integriert werden, der iterativ und agil ist.
-\item \textbf{Validieren von Produkt- und LLM-Eigenschaften}: Wie weit können LLMs und ihre neuartigen Fähigkeiten in natürlicher Sprachverarbeitung und Schlussfolgerungen vorangetrieben werden, um völlig neue Anwendungen mit beispiellosen Eigenschaften innerhalb des LLMs zu schaffen und somit disruptive Funktionen anzubieten, um neues Terrain in der Anwendung zu erschließen? Wie kann das System und Produkt um das LLM das Beste aus dem LLM herausholen, zum Beispiel durch agentisches Verhalten? Wie verhalten sich Benutzer, wenn sie diese völlig neuen Anwendungen nutzen, zum Beispiel Benutzer, die aufgrund früherer schlechter Erfahrungen mit extrem schwachen Telefon-Bots mit schrecklicher UX vorgefasste Skepsis haben? Angesichts der großen Bandbreite an Eigenschaften und Verhaltensweisen ist es unmöglich, sich in Entwicklung und Testing auf alle Szenarien und potenziellen Funktionen zu konzentrieren, sodass die Validierung nicht nur Anwendungsfälle für die gewünschte Anwendung und für die LLM-Eigenschaften liefern muss, sondern auch Prioritäten \cite{Röttger24}. Die Validierung sollte also beantworten, welche Produkte, Funktionen und LLM-Eigenschaften entwickelt werden sollen und welche Aspekte validiert werden sollen.
-\item Was und wie \textbf{LLMs verifizieren und evaluieren}: LLMs haben eine beispiellose natürliche Sprachverarbeitung und können somit gut auf verschiedene Situationen und Eckfälle generalisieren \cite{Brown20}. Angetrieben von der Validierung, auf welche Anwendungsfälle und LLM-Eigenschaften sollte sich die Evaluierung des LLMs konzentrieren, anhand welcher Metriken, die bei kundenorientierten Evaluierungen helfen? Da neuronale Netze wenig interne, hilfreiche Informationen preisgeben und als Black Boxes betrachtet werden \cite{Chang24}, ist es herausfordernd, die Korrektheit basierend auf weiteren Artefakten über die Textausgabe hinaus zu verifizieren, z.\,B. die Gewichte des neuronalen Netzes oder versteckte Aktivierungen. Darüber hinaus ist es schwierig, aufgabenorientierte Anwendungen, die von LLMs automatisiert werden, in Bezug auf den Geschäftswert zu evaluieren, da die LLM-Ausgabe nicht-deterministisch ist und in natürlicher Sprache erfolgt, deren Semantik nuanciert ist und zum Verständnis der Evaluierung verstanden werden muss. Das AI-Verhalten muss mit dem Geschäftsziel ausgerichtet sein, wobei Benutzererfahrung und -wahrnehmung berücksichtigt werden müssen. Abhängig von der Sicherheitskritikalität der Anwendung kann ein sehr hohes Vertrauen in die Korrektheit der Anwendung und weitere gewünschte Attribute erforderlich sein. Für hohe Sicherheitskritikalität muss der Verifikationsansatz daher bestimmte Garantien bieten und auf prüfbare Weise, wenn eine Zertifizierung gewünscht oder erforderlich ist.
+\item \textbf{Zusammenführen von bewährten Praktiken} aus verschiedenen Bereichen:
+  Können bewährte Praktiken aus sowohl Softwareentwicklung (z.\,B. agil und testgetrieben),
+  Data-Science (Datenanalyse, Statistik, ML, Visualisierungen),
+  als auch Safety-Engineering (Risikomanagement, Sicherheitseinstufungen und -garantien, Zertifizierung)
+  in einen kohärenten, effektiven und modernen Entwicklungsprozess für LLMs integriert werden?
+  Dieser soll iterativ und agil validieren und nach Safety-Engineering-Standards verifizieren können.
+\item \textbf{Validieren von Produkt- und LLM-Eigenschaften}: Wie weit können LLMs und ihre neuartigen Fähigkeiten in natürlicher Sprachverarbeitung, Schlussfolgerungen und Generalisierung vorangetrieben werden, um völlig neue Anwendungen zu schaffen?
+  %und somit disruptive Funktionen anzubieten, um neues Terrain in der Anwendung zu erschließen?
+  Wie kann das LLM-System das Beste aus dem LLM herausholen, zum Beispiel durch agentisches Verhalten?
+  Wie reagieren Benutzer, wenn sie diese völlig neuen Anwendungen nutzen? Beispielsweise können Benutzer,
+  die auf Grund früherer schlechter Erfahrungen mit schwachen Telefon-Bots, skeptisch und aggresiv reagieren.
+  Natürlich ist es wegen des großen Suchraums unmöglich, bei der Entwicklung und Verifkation alle Situationen abzudecken,
+  sodass die Validierung nicht nur Fälle für die Anwendung und für die LLM-Eigenschaften liefern muss,
+  sondern auch Prioritäten \cite{Röttger24}.
+%  Die Validierung muss also beantworten, welche Produkte, Funktionen und LLM-Eigenschaften entwickelt und verifiziert werden müssen.
+\item \textbf{Verifizieren des LLM(-System)s}: LLMs haben neuartige Fähigkeiten in der natürlichen Sprachverarbeitung und Generalisierung.
+  Sie können somit besser als vorherige Lösungen auf natürliche Sprache und auch verschiedene Situationen und Randfälle reagieren \cite{Brown20}.
+  Doch wie können diese natürlichsprachlichen Situationen ausgewerted und die Randfälle provoziert werden?
+  %Angetrieben von der Validierung, auf welche Anwendungsfälle und LLM-Eigenschaften sollte sich die Evaluierung des LLMs konzentrieren,
+  % anhand welcher Metriken, die bei kundenorientierten Evaluierungen helfen?
+  Zusätzlich erschwert die Technologie die Verifikation: Neuronale Netze geben wenig interne Information preisgeben \cite{Chang24}
+  und werden somit nur anhand ihrer Textausgabe verifiziert. Closed-Source Modelle sind Black-Boxes,
+  jedoch bieten Open-Source-Modelle etwas Einblicke, nämlich in deren Gewichte und versteckte Aktivierungen.
+  Da diese Informationen aber wenig Nutzen für die Verifkation liefert, werden dies Grey-Box-Modelle meist auch nur über ihre Textausgabe verifiziert.
+  Zusätzlich ist die LLM-Ausgabe häufig nichtdeterministisch mit nur nuancierten semantischen Unterschieden in der natürlichen Sprache.
+  Die Verifikation muss also die Sprache auch wirklich verstehen. 
+  Aufgabenorientierte LLM-Systeme sollten in Bezug auf den Geschäftswert verifiziert werden,
+  der aus den natürlichsprachlichen Ausgaben abgeleitet werden muss. 
+  %wobei Benutzererfahrung und -wahrnehmung berücksichtigt werden müssen.
+  Abhängig von der Sicherheitskritikalität der Anwendung kann ein sehr hohes Vertrauen in deren Korrektheit und anderen Eigenschaften erforderlich sein.
+  %Für hohe Sicherheitskritikalität muss der Verifikationsansatz daher bestimmte Garantien bieten und auf prüfbare Weise, wenn eine Zertifizierung gewünscht oder erforderlich ist.
+  Damit werden dann Garantien und Zertifizierungen nötig.
 \end{compactenum}
 
-\section{Der MediVoice Use-Case}
-Das Startup Mediform entwickelt den Telefon-Bot MediVoice \cite{MediVoice}, der Patientendienste telefonisch autonom verwaltet, z.\,B. Patienten buchen Termine, erhalten Rezepte oder Überweisungsscheine oder erhalten Antworten auf allgemeine Fragen in einem natürlichen Dialog, genau wie bei einer menschlichen medizinischen Fachangestellten (siehe Abb. \ref{fig:dialogues} links). MediVoice ersetzt eine medizinische Fachangestellte in natürlichen aufgabenorientierten Telefongesprächen  \cite{Hosseini20} und verbessert somit stark den Zugang der Patienten zu medizinischen Dienstleistungen, da Patienten endlich wieder Arztpraxen telefonisch erreichen können.
+\section{Der Anwendungsfall MediVoice}
 
+TODO: neue Daten: aus Patiententelefonaten
+
+Das Startup Mediform entwickelt den Telefon-Bot MediVoice \cite{MediVoice}, der Patientendienste telefonisch autonom verwaltet:
+Patienten buchen Termine, erhalten Rezepte oder Überweisungsscheine oder Antworten auf allgemeine Fragen, alles in einem natürlichen Dialog,
+genau wie bei einer menschlichen medizinischen Fachangestellten (siehe Abb. \ref{fig:dialogues} links).
+MediVoice ersetzt eine medizinische Fachangestellte in natürlichen aufgabenorientierten Telefongesprächen \cite{Hosseini20}.
+Damit löst MediVoice den Personalmangel in den Arztpraxenverbessert und verbessert den Zugang der Patienten zu medizinischen Dienstleistungen,
+da Patienten somit endlich wieder Arztpraxen telefonisch erreichen können.
 Da MediVoice einen hohen Grad an Autonomie erreicht, gewinnen medizinische Fachangestellte Zeit für die Behandlung von Patienten in der Praxis.
+Die folgenden Unterabschnitte beschreiben, wie das Startup Mediform die drei genannten Herausforderungen angeht.
 
-Die folgenden Unterabschnitte beschreiben, wie das Startup Mediform die drei in der Einleitung genannten Herausforderungen angeht.
+\subsection{Zusammenführen von bewährten Praktiken}
 
-\subsection{Zusammenführen von Best Practices}
-
-Um das MediVoice LLM zu entwickeln und feinzuabstimmen, muss Mediform Best Practices aus separaten Bereichen zusammenführen:
+Mediform entwickelt zwar keine LLMs von Grund auf (Foundational-Models), aber diverse Techniken,
+um Foundational-Models auf den Anwendungsfall abzustimmen.
+Dafür muss Mediform bewährte Praktiken aus separaten Bereichen zusammenführen:
 \begin{compactitem}
-\item Data Science und Data Engineering, um Tausende von Arztpraxis-Dialogen zu verarbeiten: anonymisierte Dialoge von Patienten, nicht-AI generierte Dialoge, AI generierte Dialoge
-\item Machine Learning, einschließlich Prompt Engineering, Pre-Training und Fine-Tuning von LLMs, Retrieval und agentischem Verhalten
-\item Agile Entwicklung, um mit neuen Anwendungen in unbekanntem Terrain umzugehen, wie im nächsten Unterabschnitt beschrieben.
-\item Safety Engineering, um Vertrauen zu schaffen, indem Sicherheitsspezifikationen und deren Verifikation in den Entwicklungsprozess eingebunden werden, wie im Guaranteed Safe AI Framework beschrieben \cite{Dalrymple24}.
+\item Data-Science und Data Engineering, um Tausende von Arztpraxis-Dialogen zu verarbeiten: anonymisierte Dialoge von Patienten, sowie von KI also auch regelbasiert generierte Dialoge.
+\item maschinelles Lernen, von Continual-Pre-Training, Fine-Tuning und Knowledge-Distillation über Modellkompressionen, bis hin zu Prompt Engineering, Retrieval und agentischem Verhalten.
+\item Agilität, um neuen Anwendungen in unbekanntem Terrain entwickeln zu können.
+\item Safety-Engineering, um abzuschätzen, welche Anstrengungen und Sicherheitsgarantien für eine bestimmte Anwendung erforderlich sind, und diese zu erfüllen.
+  %um Vertrauen zu schaffen, indem Sicherheitsspezifikationen und deren Verifikation in den Entwicklungsprozess eingebunden werden, wie im Guaranteed Safe AI Framework beschrieben \cite{Dalrymple24}.
 \end{compactitem}
 
 \subsection{Validieren von Produkt- und LLM-Eigenschaften}
@@ -93,7 +146,7 @@ Da Stakeholder (Mediziner, medizinische Fachangestellte, Gesundheitszentren, Cal
 
 Zum Beispiel entdeckte Mediform durch kurze Feedback-Schleifen interessante Erkenntnisse darüber, wie sich Patienten am Telefon verhalten:
 \begin{compactitem}
-\item Aufgrund früherer schlechter Erfahrungen mit extrem schwachen Telefon-Bots mit schrecklicher UX sind Patienten oft sehr skeptisch gegenüber den Fähigkeiten von MediVoice oder werden schnell wütend oder ungeduldig  (siehe Abb. \ref{fig:dialogues} oben rechts)
+\item Auf Grund früherer schlechter Erfahrungen mit schlecht funktionierenden Telefon-Bots mit schwacher UX sind Patienten oft sehr skeptisch gegenüber den Fähigkeiten von MediVoice oder werden schnell wütend oder ungeduldig  (siehe Abb. \ref{fig:dialogues} oben rechts)
 \item Ein Dialog, der von einem Mediziner als erfolgreich angesehen wird, ist nicht unbedingt erfolgreich für den Patienten (siehe Abb. \ref{fig:dialogues} unten rechts)
 \item Das unerwartete Patientenverhalten, dass über 80-Jährige effektiver mit MediVoice interagieren als jüngere Patienten \cite{Mediform24}.
 \end{compactitem}
@@ -101,41 +154,44 @@ Zum Beispiel entdeckte Mediform durch kurze Feedback-Schleifen interessante Erke
 \subsection{Verifizieren und Evaluieren von LLMs}
 \label{sec:verifyandevaluatellms}
 
+TODO: Dazu beschreiben wir die Weltmodelle, Sicherheitsspezifikationen und Verifikationsfähigkeit von \ATDLLMD{} und unserem Methodenensemble, das \ATDLLMD{} begleitet.
+
 Das Verifizieren und Evaluieren von LLMs wird aufgrund der folgenden Gründe zu einer Herausforderung:
 \begin{compactitem}
-\item LLMs lernen, sehr breite Fähigkeiten und Aufgaben zu bewältigen. Um Vertrauen in diese AI-Systeme zu gewinnen, sind zusätzliche Anstrengungen und neue Ansätze erforderlich, insbesondere wenn sie in sicherheitskritischen Umgebungen eingesetzt werden. Zum Beispiel erfordert das Guaranteed Safe AI Framework \cite{Dalrymple24} drei Komponenten: Erstens ein Weltmodell, das beschreibt, wie das AI-System die Außenwelt beeinflusst. Zweitens eine Sicherheitsspezifikation, die angibt, welche Auswirkungen akzeptabel sind. Drittens einen Verifikator, der ein prüfbares Nachweiszertifikat bereitstellt, dass die AI die Sicherheitsspezifikation relativ zum Weltmodell erfüllt.
-\item Die Verwendung von Standardmetriken und Verifikationstools \cite{Chang24} ist zu generisch, weil wir unsere LLMs auf geschäftszentrierte Weise verifizieren müssen, um bewerten zu können, dass das Modell sich korrekt in Bezug auf die gewünschten Eigenschaften und Funktionen verhält. Das bedeutet, wir brauchen: Erstens ein geeignetes Weltmodell \cite{Dalrymple24}, insbesondere einen geeigneten Testtreiber (z.\,B. müssen wir einzelne Geschäftsprozesse für jede Arztpraxis auslösen). Zweitens eine geeignete Sicherheitsspezifikation, insbesondere die richtigen Testorakel (z.\,B. solche, die vom individuellen Geschäftsprozess abhängen). Drittens geschäftszentrierte Metriken (z.\,B. zur Definition von Korrektheit oder Prioritäten).
+\item LLMs lernen, sehr breite Fähigkeiten und Aufgaben zu bewältigen. Um Vertrauen in diese KI-Systeme zu gewinnen, sind zusätzliche Anstrengungen und neue Ansätze erforderlich, insbesondere wenn sie in sicherheitskritischen Umgebungen eingesetzt werden. Zum Beispiel erfordert das Guaranteed Safe AI Framework \cite{Dalrymple24} drei Komponenten: Erstens ein Weltmodell, das beschreibt, wie das KI-System die Außenwelt beeinflusst. Zweitens eine Sicherheitsspezifikation, die angibt, welche Auswirkungen akzeptabel sind. Drittens einen Verifikator, der ein prüfbares Nachweiszertifikat bereitstellt, dass die KI die Sicherheitsspezifikation relativ zum Weltmodell erfüllt.
+\item Die Verwendung von Standardmetriken und Verifikationstools \cite{Chang24} ist zu generisch, weil wir unsere LLMs auf geschäftszentrierte Weise verifizieren müssen, um bewerten zu können, dass das Modell sich korrekt in Bezug auf die gewünschten Eigenschaften und Funktionen verhält. Wir brauchen also: Erstens ein geeignetes Weltmodell \cite{Dalrymple24}, insbesondere einen geeigneten Testtreiber (z.\,B. müssen wir einzelne Geschäftsprozesse für jede Arztpraxis auslösen). Zweitens eine geeignete Sicherheitsspezifikation, insbesondere die richtigen Testorakel (z.\,B. solche, die vom individuellen Geschäftsprozess abhängen). Drittens geschäftszentrierte Metriken (z.\,B. zur Definition von Korrektheit oder Prioritäten).
 \item Die Fähigkeiten des LLMs in Bezug auf natürliche Sprachverarbeitung und Schlussfolgerungen sind schwer zu evaluieren, weil mehrere semantisch, aber nicht syntaktisch nahe Antworten korrekt sein können. Zum Beispiel müssen wir bestimmen, ob das LLM mit gebrochener Sprache, verschiedenen Sprachen und Fehlern in der Spracherkennung umgehen kann? Außerdem muss das Modell in der Lage sein, praxis-spezifische Geschäftsprozesse zu verstehen, die in natürlicher Sprache spezifiziert sind. Das Modell muss ausreichend generalisieren und domänenspezifische Eckfälle bewältigen können.
-\item Das LLM ist nicht deterministisch und eine Black Box. Da das Modell eine Black Box ist (außer einige Modelle bieten Top-$k$ Log-Wahrscheinlichkeiten an \cite{Vaswani17}), kann das Verifikationstool nur über Input-Output-Paare messen und muss Variationen in der Ausgabe für einen festen Input handhaben, zum Beispiel mit Hilfe von semantischer Ähnlichkeit und statistischem Testen.
+\item Da das LLM eine Black-Box ist (einige Modelle bieten Top-$k$ Log-Wahrscheinlichkeiten an \cite{Vaswani17} und sind deswegen eher Grey-Box), kann das Verifikationstool nur über Input-Output-Paare messen. Da das LLM nichtdeterministisch und natürlichsprachlich ist, müssen Variationen in der Ausgabe für einen festen Input behandelt werden, zum Beispiel mit Hilfe von semantischer Ähnlichkeit und statistischem Testen.
 \end{compactitem}
 
-Um abzuschätzen, welche Anstrengungen und Sicherheitsgarantien für eine bestimmte Anwendung erforderlich sind, hat Anthropic ihre AI Safety Levels (ASL) eingeführt, die eine Form von Safety Integrity Level (SIL) sind, wie sie in anderen Bereichen wie Electrical/Electronic/Programmable Electronic (ISO 61508) und Automotive (ISO 26262) üblich sind. Das ASL bestimmt das geeignete Maß an Vorsicht für ein gegebenes AI-System, abhängig von den Fähigkeiten dieses Systems \cite{Anthropic23, Anthropic23b}.
+%Um abzuschätzen, welche Anstrengungen und Sicherheitsgarantien für eine bestimmte Anwendung erforderlich sind,
+hat Anthropic ihre AI Safety Levels (ASL) eingeführt, die eine Form von Safety Integrity Level (SIL) sind, wie sie in anderen Bereichen wie Electrical/Electronic/Programmable Electronic (ISO 61508) und Automotive (ISO 26262) üblich sind. Das ASL bestimmt das geeignete Maß an Vorsicht für ein gegebenes KI-System, abhängig von den Fähigkeiten dieses Systems \cite{Anthropic23, Anthropic23b}.
 
 Da MediVoice keine medizinischen Ratschläge gibt, sondern sich auf Patientenmanagement wie Terminbuchungen konzentriert, stellt es kein erhebliches katastrophales Risiko dar und wird nicht erwartet, gefährliche autonome Verhaltensweisen zu zeigen. Daher fällt MediVoice unter die niedrigste Stufe, ASL-1. Betriebsfehler, wie das Versäumnis, dringende Zustände in einer Gesundheitsumgebung zu erkennen, erhöhen MediVoice nicht auf ASL-2, da es keine autonomen Fähigkeiten mit höherem Potenzial für Missbrauch oder Schaden demonstriert.
 
 Da MediVoice ASL-1 ist, erzwingt das GS AI Framework keine Sicherheitsgarantien für MediVoice \cite{Dalrymple24}. Da das Versäumnis, dringende Zustände in einer Gesundheitsumgebung zu erkennen, jedoch zu ernsthaften Schäden für einzelne Patienten führen kann, versuchen wir dennoch, mit Hilfe von GS AI die höchstmögliche Sicherheitsgarantie zu erreichen.
 
-\section{Die Lösung bei Mediform}
+\section{Die Umsetzung}
 
-Nachdem wir im letzten Abschnitt spezifische Instanzen der drei Herausforderungen am Use-Case MediVoice gesehen haben, zeigt dieser Abschnitt die Lösungen von Mediform für jede Herausforderung.
+Nachdem wir im letzten Abschnitt spezifische Instanzen der drei Herausforderungen am Anwendungsfall MediVoice gesehen haben, zeigt dieser Abschnitt die Lösungen von Mediform für jede Herausforderung.
 
-\subsection{Zusammenführen von Best Practices}
+\subsection{Zusammenführen von bewährten Praktiken}
 
-Die meisten Prozesse im Bereich Data Science und Machine Learning sind eine Erweiterung von CRISP-DM \cite{CRISP99}, dem Cross-Industry Standard Process - Data Mining. Zum Beispiel ist \cite{Farago23} eine Erweiterung, die sich nur auf Prompt Engineering konzentriert, während CRISP-ML \cite{Studer21} sich auf Automotive und Wasserfallprozesse konzentriert und Agilität ignoriert, die für kurze Iterationen mit Kundenfeedback für geschäftszentrierte Validierung und für moderne Softwareentwicklungs-Best-Practices erforderlich ist. Nach unserem Kenntnisstand gibt es nur einen Prozess und ein Framework, um sowohl einen daten- als auch einen geschäftszentrierten und agilen Ansatz zu ermöglichen, der modern, AI-spezifisch und anbieterneutral ist: das Cognitive Process Management for AI (CPMAI) von Cognilytica, siehe Abb. \ref{fig:cpmai}. Es hat Daten im Kern, die in jeder der sechs Phasen gelesen, modifiziert oder erweitert werden:
+Die meisten Prozesse im Bereich Data-Science und maschinelles Lernen sind eine Erweiterung von CRISP-DM \cite{CRISP99}, dem Cross-Industry Standard Process - Data Mining. Zum Beispiel ist \cite{Farago23} eine Erweiterung, die sich nur auf Prompt Engineering konzentriert, während CRISP-ML \cite{Studer21} sich auf Automotive und Wasserfallprozesse konzentriert und Agilität ignoriert, die für kurze Iterationen mit Kundenfeedback für geschäftszentrierte Validierung und für moderne Softwareentwicklungs-Praktiken erforderlich ist. Nach unserem Kenntnisstand gibt es nur einen Prozess und ein Framework, um sowohl einen daten- als auch einen geschäftszentrierten und agilen Ansatz zu ermöglichen, der modern, KI-spezifisch und anbieterneutral ist: das Cognitive Process Management for AI (CPMAI) von Cognilytica, siehe Abb. \ref{fig:cpmai}. Es hat Daten im Kern, die in jeder der sechs Phasen gelesen, modifiziert oder erweitert werden:
 \begin{compactitem}
-\item \textbf{Business Understanding}, das ein Verständnis der Geschäfts- und Organisationsanforderungen sammelt und sie auf eine AI-Lösung abbildet
+\item \textbf{Business Understanding}, das ein Verständnis der Geschäfts- und Organisationsanforderungen sammelt und sie auf eine KI-Lösung abbildet
 \item \textbf{Data Understanding}, das Daten (Qualitäts-)Anforderungen und Datenquellen identifiziert, um das Problem anzugehen
 \item \textbf{Data Preparation}, das die Trainings- und Testdatensätze durch Datenbereinigung, Datenaggregation, Datenaugmentation, Datenlabeling und Datentransformation vorbereitet
-\item \textbf{Data Modeling}, das eine AI-Lösung erzeugt, mit Fokus auf die Entwicklung des ML-Modells durch Wahl der Modellarchitektur, Trainingstechnik und Hyperparameter sowie durch Modelltraining und -optimierung
-\item \textbf{Model Evaluation}, das die Konfusionsmatrix und Fehler analysiert und Metriken wie Precision, Recall, Accuracy und mehr geschäftszentrierte KPIs in Bezug auf Qualität, Leistung und andere Ilities misst. Dies hilft zu entscheiden, ob die AI-Lösung die Ziele der Iteration erfüllt, die aus den Geschäfts- oder Organisationsanforderungen abgeleitet sind.
-\item \textbf{Model Operationalization}, führt Modellversionierung, Modellbereitstellung, Modellüberwachung und Modellstaging durch, um die AI-Lösung der Iteration an die Stakeholder bereitzustellen.
+\item \textbf{Data Modeling}, das eine KI-Lösung erzeugt, mit Fokus auf die Entwicklung des ML-Modells durch Wahl der Modellarchitektur, Trainingstechnik und Hyperparameter sowie durch Modelltraining und -optimierung
+\item \textbf{Model Evaluation}, das die Konfusionsmatrix und Fehler analysiert und Metriken wie Precision, Recall, Accuracy und mehr geschäftszentrierte KPIs in Bezug auf Qualität, Leistung und andere Ilities misst. Dies hilft zu entscheiden, ob die KI-Lösung die Ziele der Iteration erfüllt, die aus den Geschäfts- oder Organisationsanforderungen abgeleitet sind.
+\item \textbf{Model Operationalization}, führt Modellversionierung, Modellbereitstellung, Modellüberwachung und Modellstaging durch, um die KI-Lösung der Iteration an die Stakeholder bereitzustellen.
 \end{compactitem}
 
-CPMAI enthält spezifischere Details und aktuelle Data Science und AI Best Practices, z.\,B.
+CPMAI enthält spezifischere Details und aktuelle Data-Science und bewährte Praktiken der KI, z.\,B.
 \begin{compactitem}
-\item welche der gängigen sieben Muster von AI (Erkennung, Konversation \& Mensch-Interaktion, Prädiktive Analytik \& Entscheidungen, Zielgesteuerte Systeme, Autonome Systeme, Muster \& Anomalien, Hyper-Personalisierung, siehe \cite{Cognilytica}) in der aktuellen AI-Lösung angewendet werden
+\item welche der gängigen sieben Muster von KI (Erkennung, Konversation \& Mensch-Interaktion, Prädiktive Analytik \& Entscheidungen, Zielgesteuerte Systeme, Autonome Systeme, Muster \& Anomalien, Hyper-Personalisierung, siehe \cite{Cognilytica}) in der aktuellen KI-Lösung angewendet werden
 \item wie man ML-Modelle trainiert und optimiert
-\item Data Science, Big Data und Visualisierungs-Best-Practices.
+\item bewährte Praktiken aus Data-Science, Big Data und Visualisierung.
 \end{compactitem}
 
 Im Gegensatz zu CRISP-DM \cite{CRISP99}, CRISP-ML \cite{Studer21} und anderen Erweiterungen bietet CPMAI nicht nur einen Schritt von der Model Evaluation Phase zurück zur Business Understanding Phase, sondern hat moderne agile Praktiken vollständig übernommen:
@@ -155,7 +211,7 @@ Im Gegensatz zu CRISP-DM \cite{CRISP99}, CRISP-ML \cite{Studer21} und anderen Er
 \end{center}
 \end{figure}
 
-Diese Flexibilität und Übernahme moderner agiler Praktiken ermöglicht eine einfache Einbettung aktueller Entwicklungs-Best-Practices, z.\,B. Test-Driven Development (TDD). TDD ist eine test-first Softwareentwicklungs-Methodik, d.\,h. Tests werden geschrieben, bevor die eigentliche Software, d.\,h. das zu testende System (SUT), entwickelt wird. In TDD wird ein Rot-Grün-Refaktor-Zyklus befolgt: Ein neu geschriebener Test schlägt zunächst fehl, was die Aktualisierung des SUT motiviert, aber nur mit genug Entwicklung, um den neuen Test zu bestehen. Die neuen und alle alten Tests bieten ein Sicherheitsnetz, um Refactoring sowohl der Tests als auch des SUT zu ermöglichen. Schließlich können wir durch die nächste Schleife des Rot-Grün-Refaktor-Zyklus iterieren.
+Diese Flexibilität und Übernahme moderner agiler Praktiken ermöglicht eine einfache Einbettung aktueller Entwicklungs-Praktiken, z.\,B. Test-Driven Development (TDD). TDD ist eine test-first Softwareentwicklungs-Methodik, d.\,h. Tests werden geschrieben, bevor die eigentliche Software, d.\,h. das zu testende System (SUT), entwickelt wird. In TDD wird ein Rot-Grün-Refaktor-Zyklus befolgt: Ein neu geschriebener Test schlägt zunächst fehl, was die Aktualisierung des SUT motiviert, aber nur mit genug Entwicklung, um den neuen Test zu bestehen. Die neuen und alle alten Tests bieten ein Sicherheitsnetz, um Refactoring sowohl der Tests als auch des SUT zu ermöglichen. Schließlich können wir durch die nächste Schleife des Rot-Grün-Refaktor-Zyklus iterieren.
 
 CPMAI kann leicht angepasst werden, um TDD einzubetten:
 \begin{compactitem}
@@ -194,7 +250,7 @@ Für LM-Eval (siehe Abb.~\ref{fig:lmeval}) haben wir unter anderem hinzugefügt:
 \begin{compactitem}
 \item unseren eigenen Testtreiber, um die Testausführung natürlicher Dialoge in unserem eigenen Format zu ermöglichen, mit Template-Variablen und Metadaten, die Felder für Geschäftsprozesse enthalten können, die individuell für die betrachtete Arztpraxis sind
 \item unsere eigenen geschäftszentrierten Testorakel und Metriken zur Evaluierung natürlicher Dialoge in Bezug auf natürliche Sprachverarbeitung und die Domäne. Zum Beispiel aggregieren wir statistisch, indem wir individuelle Ergebnisse basierend auf ihrer semantischen und geschäftlichen Relevanz gewichten (siehe Abb. \ref{fig:lmeval})
-\item Funktionen zur Durchführung von nicht-deterministischem Black-Box-Testing. Zum Beispiel führen wir semantische Vergleiche durch (z.\,B. strenger für \texttt{pre} Anrufe als \texttt{msg} Anrufe, siehe Abb. \ref{fig:lmeval}) und erlauben die Angabe mehrerer alternativer Ausgaben.
+\item Funktionen zur Durchführung von nichtdeterministischem Black-Box-Testing. Zum Beispiel führen wir semantische Vergleiche durch (z.\,B. strenger für \texttt{pre} Anrufe als \texttt{msg} Anrufe, siehe Abb. \ref{fig:lmeval}) und erlauben die Angabe mehrerer alternativer Ausgaben.
 \end{compactitem}
 Mit unseren templatisierten Dialogtestsätzen als benutzerdefinierte Benchmarks kann LM-Eval unsere MediVoice-Modelle evaluieren und die in Abschnitt~\ref{sec:verifyandevaluatellms} beschriebenen Herausforderungen bewältigen.
 
@@ -233,15 +289,15 @@ Die manuellen Inspektionen haben Menschen mit ihrem Wissen und Annahmen als Welt
 
 \subsection{Kombinieren aller Lösungen}
 
-Mit CPMAI und LM-Eval an Ort und Stelle können wir eine CPMAI-Rundreise mit \ATDLLMD{} durchführen: Wir sammeln iterativ Dialoge von realen Patienten in der Model Operationalization Phase, d.\,h. die Interaktionen der Patienten mit unserem neuartigen Telefon-Bot. Wir anonymisieren sie in einer DSGVO-konformen Weise und führen dann Business und Data Understanding darauf durch, mit Hilfe unseres Interaction Analytics Dashboards sowie manueller Exploration. Anhand der gesammelten Dialoge, insbesondere derjenigen mit unerwünschtem Verhalten, und Erkenntnissen aus Fehleranalysen darüber, aktualisieren wir Dialoge und möglicherweise die Weltmodelle und Sicherheitsspezifikationen und erstellen in der Data Preparation Phase neue Dialoge mit dem entsprechenden gewünschten Verhalten. Die Dialoge werden als Trainingsdaten oder Akzeptanztests spezifiziert, die die aktuelle CPMAI-Iteration von Rot (fehlschlagende Akzeptanztests) während der Data Preparation, über Data Modeling (Training), zu Grün (bestehende Akzeptanztests) während Model Evaluation und Operationalization treiben. Testausführung und Evaluierung werden von LM-Eval und ergänzenden Testmethoden durchgeführt. Im Gegensatz zu klassischem ATDD müssen nicht alle Akzeptanztests grün werden, sondern nur genug, um die geforderte Metrik zu erreichen, z.\,B. 90\,\% Genauigkeit. Dieser \textbf{Rot-Train-Grün-Zyklus} in \ATDLLMD{} ähnelt ATDD, integriert aber Data-Science-Best-Practices. Er ähnelt auch CPMAI, integriert aber weitere moderne Softwareentwicklung, Testing und Safety Engineering Best Practices.
+Mit CPMAI und LM-Eval an Ort und Stelle können wir eine CPMAI-Rundreise mit \ATDLLMD{} durchführen: Wir sammeln iterativ Dialoge von realen Patienten in der Model Operationalization Phase, d.\,h. die Interaktionen der Patienten mit unserem neuartigen Telefon-Bot. Wir anonymisieren sie in einer DSGVO-konformen Weise und führen dann Business und Data Understanding darauf durch, mit Hilfe unseres Interaction Analytics Dashboards sowie manueller Exploration. Anhand der gesammelten Dialoge, insbesondere derjenigen mit unerwünschtem Verhalten, und Erkenntnissen aus Fehleranalysen darüber, aktualisieren wir Dialoge und möglicherweise die Weltmodelle und Sicherheitsspezifikationen und erstellen in der Data Preparation Phase neue Dialoge mit dem entsprechenden gewünschten Verhalten. Die Dialoge werden als Trainingsdaten oder Akzeptanztests spezifiziert, die die aktuelle CPMAI-Iteration von Rot (fehlschlagende Akzeptanztests) während der Data Preparation, über Data Modeling (Training), zu Grün (bestehende Akzeptanztests) während Model Evaluation und Operationalization treiben. Testausführung und Evaluierung werden von LM-Eval und ergänzenden Testmethoden durchgeführt. Im Gegensatz zu klassischem ATDD müssen nicht alle Akzeptanztests grün werden, sondern nur genug, um die geforderte Metrik zu erreichen, z.\,B. 90\,\% Genauigkeit. Dieser \textbf{Rot-Train-Grün-Zyklus} in \ATDLLMD{} ähnelt ATDD, integriert aber bewährte Praktiken des Data-Science. Er ähnelt auch CPMAI, integriert aber weitere moderne Praktiken der Softwareentwicklung, des Testings und des Safety-Engineerings.
 
 \section{Schlussfolgerung}
 
-Zusammenfassend stellt die Anwendung von ATDD auf das Fine-Tuning von LLMs einen bedeutenden Schritt nach vorne bei der Entwicklung zuverlässigerer, genauerer und benutzerzentrierter AI-Sprachsysteme dar. Dieser \ATDLLMD{}-Ansatz verbessert nicht nur die Qualität der Ausgaben, sondern stärkt auch das Vertrauen der Benutzer in AI-Technologien.
+Zusammenfassend stellt die Anwendung von ATDD auf das Fine-Tuning von LLMs einen bedeutenden Schritt nach vorne bei der Entwicklung zuverlässigerer, genauerer und benutzerzentrierter KI-Sprachsysteme dar. Dieser \ATDLLMD{}-Ansatz verbessert nicht nur die Qualität der Ausgaben, sondern stärkt auch das Vertrauen der Benutzer in KI-Technologien.
 
 Obwohl unsere Anwendung ASL-1 ist, geben wir Sicherheitsgarantien mit einem Ensemble von Testmethoden, mit Weltmodellen bis Level W1, Sicherheitsspezifikation bis Level S3 und Verifikatoren bis Level V3.
 
-Als zukünftige Arbeit untersuchen wir Möglichkeiten, Teile dieses Prozesses zu automatisieren, indem wir AI selbst verwenden, um Test-Szenarien und Spezifikationen zu generieren und zu aktualisieren. Darüber hinaus versuchen wir, Feedback von verschiedenen Benutzern direkt in unser Modell zu integrieren (anstatt Feedback selbst abzuleiten und das Feedback zu verwenden, um neue Test- und Trainingsdaten manuell abzuleiten).
+Als zukünftige Arbeit untersuchen wir Möglichkeiten, Teile dieses Prozesses zu automatisieren, indem wir KI selbst verwenden, um Test-Szenarien und Spezifikationen zu generieren und zu aktualisieren. Darüber hinaus versuchen wir, Feedback von verschiedenen Benutzern direkt in unser Modell zu integrieren (anstatt Feedback selbst abzuleiten und das Feedback zu verwenden, um neue Test- und Trainingsdaten manuell abzuleiten).
 
 \section{Danksagungen}
 
@@ -253,31 +309,49 @@ Dank geht an Cognilytica, LLC, die das Urheberrecht und die Marke für die CPMAI
 
 \small
 \begin{thebibliography}{99}
-\bibitem{Akiba24} Akiba, Takuya, et al. "Evolutionary optimization of model merging recipes." arXiv preprint arXiv:2403.13187. 2024.
+\bibitem{Akiba24} Akiba, Takuya, et al. {\emph Evolutionary optimization of model merging recipes}. arXiv preprint arXiv:2403.13187. 2024.
 
-\bibitem{Brown20} Brown, Tom, et al. "Language models are few-shot learners." Advances in neural information processing systems 33. 2020.
+\bibitem{Anthropic23} Anthropic. {\emph Anthropic's Responsible Scaling Policy} report. September 19, 2023. https://www-cdn.anthropic.com/1adf000c8f675958c2ee23805d91aaade1cd4613/responsible-scaling-policy.pdf
 
-\bibitem{Chang24} Chang, Yupeng, et al. "A survey on evaluation of large language models." ACM Transactions on Intelligent Systems and Technology 15.3 (2024): 1--45.
+\bibitem{Anthropic23b} Anthropic. {\emph Anthropic's Responsible Scaling Policy} blogpost. September 19, 2023. https://www.anthropic.com/news/anthropics-responsible-scaling-policy.
 
+\bibitem{Brown20} Brown, Tom, et al. {\emph Language models are few-shot learners} Advances in neural information processing systems 33. 2020.
+
+\bibitem{Chang24} Chang, Yupeng, et al. {\emph A survey on evaluation of large language models}. ACM Transactions on Intelligent Systems and Technology 15.3 (2024): 1--45.
+
+\bibitem{Cheng24} Cheng, Hongrong, Miao Zhang, and Javen Qinfeng Shi. {\emph A survey on deep neural network pruning: Taxonomy, comparison, analysis, and recommendations}. IEEE Transactions on Pattern Analysis and Machine Intelligence (2024).
+  
 \bibitem{Cognilytica} Cognilytica. “The Seven Patterns of AI”. \url{https://www.cognilytica.com/the-seven-patterns-of-ai/}
 
 \bibitem{CPMAI} Cognilytica: “Cognitive Project Management For AI”, \url{https://www.cognilytica.com/what-is-the-cognitive-project-management-for-ai-cpmai-methodology/}
 
 \bibitem{CRISP99} “Cross Industry Standard Process for Data Mining 1.0”. \url{https://web.archive.org/web/20220401041957/https://www.the-modeling-agency.com/crisp-dm.pdf}
 
+\bibitem{Dalrymple24} David ``davidad'' Dalrymple et al. {\em Towards Guaranteed Safe AI: A Framework for Ensuring Robust and Reliable AI Systems}. July 2024.
+
 \bibitem{Dettmers22} Dettmers, T., Lewis, M., Belkada, Y., and Zettlemoyer, L. "LLM.int8(): 8-bit matrix multiplication for transformers at scale." Advances in Neural Information Processing Systems 35. 2022.
 
+\bibitem{EUAI24} EU. {\em Regulation (EU) 2024/1689 of the European Parliament and of the Council of 13 June 2024 laying down harmonised rules on artificial intelligence and amending Regulations}. 2024. \url{http://data.europa.eu/eli/reg/2024/1689/oj}.
+  
 \bibitem{Farago23} Faragó, David. "Engineering A Reliable Prompt For Generating Unit Tests -- Prompt engineering for QA \& QA for prompt engineering." Softwaretechnik-Trends (STT) 43(3). 2023.
 
+\bibitem{Saad24} Saad-Falcon, Jon, et al. "Archon: An Architecture Search Framework for Inference-Time Techniques." arXiv preprint arXiv:2409.15254 (2024).
+
+\bibitem{Fu24} Fu, Dan, et al. {\emph Monarch mixer: A simple sub-quadratic gemm-based architecture}. Advances in Neural Information Processing Systems 36. 2024.
+  
 \bibitem{Gao23} Gao, Leo, et al. “A framework for few-shot language model evaluation." 2023. \url{https://zenodo.org/records/10256836}
 
 \bibitem{Github23} Github. “How to build an enterprise LLM application: Lessons from GitHub Copilot”. \url{https://github.blog/2023-09-06-how-to-build-an-enterprise-llm-application-lessons-from-github-copilot/}.
 
 \bibitem{Gra23} Gramener Blog: "Large Language Models (LLMs): A Technology Gifted by Aliens Without a Manual". 2023. \url{https://blog.gramener.com/large-language-models-llms-technology}
 
+\bibitem{Hasani22} Hasani, Ramin, et al. {\emph Liquid structural state-space models}. arXiv preprint arXiv:2209.12951. 2022.
+  
 \bibitem{HF24} Hugging Face. "Open LLM Leaderboard". 2024. \url{https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard}
 
 \bibitem{Hosseini20} Hosseini-Asl, Ehsan, et al. "A simple language model for task-oriented dialogue." Advances in Neural Information Processing Systems 33. 2020.
+
+\bibitem{Ji23} Ji et al. {\em Survey of hallucination in natural language generation}. ACM Computing Surveys 55.12 (2023).
 
 \bibitem{Kaplan20} Kaplan, Jared, et al. "Scaling laws for neural language models." arXiv preprint arXiv:2001.08361. 2020.
 
@@ -285,20 +359,32 @@ Dank geht an Cognilytica, LLC, die das Urheberrecht und die Marke für die CPMAI
 
 \bibitem{Liu22} Liu, Haokun, et al. "Few-shot parameter-efficient fine-tuning is better and cheaper than in-context learning." Advances in Neural Information Processing Systems 35. 2022.
 
+\bibitem{Ma24} Ma, Xuezhe, et al. {\emph Megalodon: Efficient llm pretraining and inference with unlimited context length}. arXiv preprint arXiv:2404.08801. 2024.
+  
 \bibitem{Mediform24} Mediform: “Ältere Menschen buchen problemlos Termine via MediVoice”. \url{https://tinyurl.com/medivoice}.
 
 \bibitem{MediVoice} Mediform. “Die Revolution für das Praxistelefon”. \url{https://mediform.io/medivoice/}
 
-\bibitem{Minaee24} Minaee, Shervin, et al. "Large language models: A survey." arXiv preprint arXiv:2402.06196. 2024.
+\bibitem{Merrill24} Merrill, William, Jackson Petty, and Ashish Sabharwal. {\emph The illusion of state in state-space models}. arXiv preprint arXiv:2404.08819. 2024.
+  
+\bibitem{Minaee24} Minaee, Shervin, et al. {\emph Large language models: A survey}. arXiv preprint arXiv:2402.06196. 2024.
 
+\bibitem{Patro24} Patro, Badri Narayana, and Vijay Srinivas Agneeswaran. {\emph Mamba-360: Survey of state space models as transformer alternative for long sequence modelling: Methods, applications, and challenges}. arXiv preprint arXiv:2404.16112. 2024.
+  
+\bibitem{Ren21} Ren, Pengzhen, et al. \emph{A comprehensive survey of neural architecture search: Challenges and solutions}. ACM Computing Surveys (CSUR) 54.4. 2021.
+  
 \bibitem{Röttger24} Röttger, Nils, Gerhard Runze, and Verena Dietrich. \emph{Basiswissen KI-Testen: Qualität von und mit KI-basierten Systemen: Aus- und Weiterbildung zum Certified Tester AI Testing: Foundation Level Specialist nach ISTQB®-Standard}. punkt.verlag. 2024.
 
+\bibitem{Sun24} Sun, Yu, et al. {\emph Learning to (learn at test time): Rnns with expressive hidden states}. arXiv preprint arXiv:2407.04620. 2024.
+  
 \bibitem{Studer21} Studer, Stefan, et al. "Towards CRISP-ML (Q): a machine learning process model with quality assurance methodology." Machine learning and knowledge extraction 3.2. 2021.
 
-\bibitem{Vaswani17} Vaswani, Ashish, et al. "Attention is all you need." Advances in neural information processing systems 30. 2017.
+\bibitem{Vaswani17} Vaswani, Ashish, et al. {\emph Attention is all you need}. Advances in neural information processing systems 30. 2017.
 
-\bibitem{Wang24} Chen, Wang, et al. "Systems engineering issues for industry applications of large language model." Applied Soft Computing 151. 2024.
+\bibitem{Wang24} Chen, Wang, et al. {\emph Systems engineering issues for industry applications of large language model}. Applied Soft Computing 151. 2024.
 
+\bibitem{Xu24} Xu, Xiaohan, et al. {\emph A survey on knowledge distillation of large language models}. arXiv preprint arXiv:2402.13116. 2024.
+  
 \end{thebibliography}
 
 \end{document}
